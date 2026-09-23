@@ -1,0 +1,107 @@
+name: Laravel Agent Native CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3', '8.4']
+        laravel: ['11', '12', '13']
+        stability: [prefer-lowest, prefer-stable]
+        include:
+          - php: 8.2
+            laravel: 11
+            require-dev: "laravel/framework:^11.0"
+          - php: 8.2
+            laravel: 12
+            require-dev: "laravel/framework:^12.0"
+          - php: 8.2
+            laravel: 13
+            require-dev: "laravel/framework:^13.0"
+          - php: 8.3
+            laravel: 12
+            require-dev: "laravel/framework:^12.0"
+          - php: 8.3
+            laravel: 13
+            require-dev: "laravel/framework:^13.0"
+          - php: 8.4
+            laravel: 13
+            require-dev: "laravel/framework:^13.0"
+          - php: 8.4
+            laravel: 12
+            require-dev: "laravel/framework:^12.0"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer require ${REQUIRE_DEV} --no-update --quiet || true
+          composer update --no-interaction --prefer-dist --${STABILITY}
+          composer validate --strict
+
+      - name: Run Pest tests
+        run: vendor/bin/pest --parallel --coverage-clover=${{ runner.temp }}/clover.xml || vendor/bin/pest --coverage-clover=${{ runner.temp }}/clover.xml
+
+      - name: Run Pint (code style)
+        run: vendor/bin/pint --test
+
+      - name: Upload coverage reports
+        if: success()
+        uses: codecov/codecov-action@v4
+        with:
+          files: ${{ runner.temp }}/clover.xml
+          flags: php-${{ matrix.php }},laravel-${{ matrix.laravel }}
+          name: php-${{ matrix.php }}-laravel-${{ matrix.laravel }}
+          fail_ci_if_error: false
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run Pint
+        run: vendor/bin/pint --test
+
+      - name: Check JSON formatting
+        run: |
+          for file in composer.json phpunit.xml; do
+            if ! python3 -c "import json; json.load(open('$file'))"; then
+              echo "Invalid JSON in $file"
+              exit 1
+            fi
+          done
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Composer audit
+        run: composer audit --audit-with="composer/installer"

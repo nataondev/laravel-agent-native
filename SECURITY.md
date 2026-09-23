@@ -13,7 +13,7 @@ If you discover a security vulnerability in `laravel-agent-native`, please repor
 ### How to Report
 
 1. **Do NOT post details publicly** (in issues, discussions, etc.)
-2. **Email**: Send detailed report to **nataondee@gmail.com**
+2. **Email**: Send detailed report to **nataondev@proton.me**
 3. **Include**:
    - Description of the vulnerability
    - Steps to reproduce

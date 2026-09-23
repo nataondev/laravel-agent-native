@@ -25,7 +25,7 @@ composer require nataondev/laravel-agent-native
 php artisan vendor:publish --tag=agent-native-config
 ```
 
-PHP 8.2+ · Laravel 11+ · Livewire 3+ (optional)
+- PHP 8.2+ · Laravel 11+ · Livewire 3+ or 4+ (optional)
 
 ## How it works
 

@@ -54,6 +54,7 @@ final class AgentNativeServiceProvider extends ServiceProvider
                 Commands\AgentCacheCommand::class,
                 Commands\AgentClearCommand::class,
                 Commands\AgentMcpInstallCommand::class,
+                Commands\AgentDiscoverCommand::class,
             ]);
         }
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AgentNative\Laravel\Commands;
 
-use AgentNative\Laravel\Schema\ActionDefinition;
 use AgentNative\Laravel\Schema\SchemaCompiler;
 use Illuminate\Console\Command;
 
@@ -65,7 +64,7 @@ final class AgentDiscoverCommand extends Command
         );
 
         $this->table(['Class', 'Actions', 'File'], $rows);
-        $this->components->info("Found " . count($candidates) . " class(es).");
+        $this->components->info('Found '.count($candidates).' class(es).');
 
         // Register mode
         if ($this->option('register')) {
@@ -111,7 +110,7 @@ final class AgentDiscoverCommand extends Command
         }
         $class = $classMatch[1];
 
-        return $namespace . '\\' . $class;
+        return $namespace.'\\'.$class;
     }
 
     private function registerCandidates(array $candidates): int
@@ -144,13 +143,13 @@ final class AgentDiscoverCommand extends Command
             $this->components->warn("Could not find the 'classes' => [ anchor in config.");
             $this->components->bulletList(['Add manually under \'classes\': ']);
 
-            $lines = array_map(static fn ($fqcn): string => '\\'. $fqcn . '::class,', array_keys($candidates));
+            $lines = array_map(static fn ($fqcn): string => '\\'.$fqcn.'::class,', array_keys($candidates));
             $this->line(implode("\n", $lines));
 
             return self::SUCCESS;
         }
 
-        $indent = $matches['indent'][0] . '    ';
+        $indent = $matches['indent'][0].'    ';
         $added = 0;
 
         foreach ($candidates as $fqcn) {
@@ -161,8 +160,8 @@ final class AgentDiscoverCommand extends Command
             $anchorOffset = $matches[0][1];
             $anchorEnd = $anchorOffset + strlen($matches[0][0]);
 
-            $insertedLine = PHP_EOL . $indent . "\\{$fqcn}::class,";
-            $contents = substr($contents, 0, $anchorEnd) . $insertedLine . substr($contents, $anchorEnd);
+            $insertedLine = PHP_EOL.$indent."\\{$fqcn}::class,";
+            $contents = substr($contents, 0, $anchorEnd).$insertedLine.substr($contents, $anchorEnd);
 
             $added++;
         }
@@ -171,7 +170,7 @@ final class AgentDiscoverCommand extends Command
         $this->components->info("Registered {$added} new class(es) in config/agent-native.php.");
 
         if ($added < count($candidates)) {
-            $this->components->info("Already registered: " . (count($candidates) - $added) . " class(es).");
+            $this->components->info('Already registered: '.(count($candidates) - $added).' class(es).');
         }
 
         return self::SUCCESS;

@@ -6,11 +6,14 @@ use AgentNative\Laravel\Engine\ActionRegistry;
 use AgentNative\Laravel\Mcp\AgentNativeServer;
 use AgentNative\Laravel\Tests\Fixtures\TaskService;
 use Laravel\Mcp\Request;
+use Laravel\Mcp\Server\Contracts\Transport;
+use Laravel\Mcp\Server\Transport\FakeTransporter;
 
 beforeEach(function () {
     config()->set('agent-native.classes', [TaskService::class]);
     config()->set('agent-native.cache_path', null);
     $this->app->forgetInstance(ActionRegistry::class);
+    $this->app->bind(Transport::class, FakeTransporter::class);
 });
 
 it('builds an MCP tool for every registered action', function () {

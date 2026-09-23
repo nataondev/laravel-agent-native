@@ -10,6 +10,7 @@ use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Instructions;
 use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Attributes\Version;
+use Laravel\Mcp\Server\Contracts\Transport;
 use Laravel\Mcp\Server\Tool;
 
 /**
@@ -36,8 +37,10 @@ class AgentNativeServer extends Server
      */
     protected array $tools = [];
 
-    public function __construct(ActionRegistry $registry, ActionExecutor $executor)
+    public function __construct(Transport $transport, ActionRegistry $registry, ActionExecutor $executor)
     {
+        parent::__construct($transport);
+
         foreach ($registry->all() as $definition) {
             $this->tools[] = new AgentNativeTool($definition, $executor);
         }

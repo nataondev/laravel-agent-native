@@ -1,0 +1,57 @@
+{
+    "name": "nataondev/laravel-agent-native",
+    "description": "Turn Livewire components and Laravel services into agent-ready tools with PHP 8 attributes. One definition powers your UI, LLM tool calling, and MCP endpoints.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": ["laravel", "livewire", "ai", "agents", "llm", "mcp", "tool-calling"],
+    "require": {
+        "php": "^8.2",
+        "illuminate/contracts": "^11.0|^12.0",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/container": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "laravel/mcp": "^1.0",
+        "laravel/pint": "^1.18",
+        "livewire/livewire": "^3.0",
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "suggest": {
+        "laravel/mcp": "Expose your #[AgentAction] methods as a standard MCP server (web + stdio) via the optional bridge (docs/mcp.md).",
+        "livewire/livewire": "Enable the Livewire bridge (InteractsWithAgent, AgentBridge) for in-app agent reactivity."
+    },
+    "autoload": {
+        "psr-4": {
+            "AgentNative\\Laravel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AgentNative\\Laravel\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AgentNative\\Laravel\\AgentNativeServiceProvider"
+            ],
+            "aliases": {
+                "AgentNative": "AgentNative\\Laravel\\Facades\\AgentNative"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "lint": "vendor/bin/pint"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

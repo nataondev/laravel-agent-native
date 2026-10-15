@@ -6,9 +6,9 @@
     "keywords": ["laravel", "livewire", "ai", "agents", "llm", "mcp", "tool-calling"],
     "require": {
         "php": "^8.2",
-        "illuminate/contracts": "^11.0|^12.0",
-        "illuminate/support": "^11.0|^12.0",
-        "illuminate/container": "^11.0|^12.0"
+        "illuminate/contracts": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "illuminate/container": "^11.0|^12.0|^13.0"
     },
     "require-dev": {
         "laravel/mcp": "^1.0",
